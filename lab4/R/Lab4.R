@@ -2,7 +2,6 @@
 linreg <- function(formula, data){
   X <- model.matrix(formula, data)
   X <- unname(X)
-  X <- matrix(c(12,  93,  35, 102,  62,  -8,  67,  24,  45,   4,  99,  16), ncol = 3, byrow = TRUE)
   dvar <- all.vars(formula)[1]
   m <- dim(X)[1]
   n <- dim(X)[2]
@@ -17,7 +16,7 @@ linreg <- function(formula, data){
       X[k:m,j] <- X[k:m,j]-(v*c(2*(t(v)%*%X[k:m, j])))
     }
     for (i in 1:m){
-      Q[k:m,j] <- Q[k:m,j]-(v*c(2*(t(v)%*%Q[k:m, j])))
+      Q[k:m,i] <- Q[k:m,i]-(v*c(2*(t(v)%*%Q[k:m, i])))
     }
   }
   Q <- t(Q)
