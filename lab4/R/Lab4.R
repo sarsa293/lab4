@@ -15,10 +15,14 @@ linreg <- function(formula, data){
     for (j in 1:n){
       X[k:m,j] <- X[k:m,j]-(v*c(2*(t(v)%*%X[k:m, j])))
     }
-    for (i in 1:m){
-      Q[k:m,i] <- Q[k:m,i]-(v*c(2*(t(v)%*%Q[k:m, i])))
+    for (j in 1:m){
+      Q[k:m,j] <- Q[k:m,j]-(v*c(2*(t(v)%*%Q[k:m, j])))
     }
   }
-  Q <- t(Q)
-  R <- X*upper.tri(X, diag=T)
+  #What is nargin == 2?? if nargin == 2 Q and R have to be truncated...
+  Q <- t(Q)[,1:n]
+  R <- (X*upper.tri(X, diag=T))[1:n,]
+  #Calculating beta 
+  right_hand_side <- t(Q) %*% y
+  beta <- solve(R,right_hand_side)
 }
