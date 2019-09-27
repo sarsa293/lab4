@@ -3,8 +3,8 @@
 #'@title Linear model using QR decompoition
 #'
 #'@description This function creates a linreg object. The object contains the qr matrix, coefficients, fitted values, residuals, degrees of freedom, variance, t_values and p_values of the linear model for \code{x} and \code{y}.
-#'@param formula A formula with the shape x ~ y, where x is the dependent variable and y the independent variable.
-#'@param data A dataset containing the variables of formula.
+#'@field formula A formula with the shape x ~ y, where x is the dependent variable and y the independent variable.
+#'@field data A dataset containing the variables of formula.
 #'
 #'@return A linreg Reference Class object containing the following statistics: 
 #'@return \code{coefficients} a named vector of coefficients,
@@ -18,6 +18,7 @@
 #'@references More information on Linear regression \href{https://en.wikipedia.org/wiki/Linear_regression}{here}.
 #'
 #'@export
+NULL
 
 # 1.2.2 (*) Using the QR decomposition
 
@@ -35,7 +36,8 @@ linreg <- setRefClass("linreg", fields = list(
   residuals = "numeric",
   df= "numeric",
   variance = "numeric",
-  t_values = "numeric"
+  t_values = "numeric",
+  data_print = "character"
 ))
 
 #Modifying methods
@@ -86,11 +88,22 @@ linreg$methods(initialize = function(formula, data){
   
   #t-values
   t_values <<- coefficients / sqrt(variance)
+  
+  #strings formula and data
+  formula <<- formula
+  data_print <<- deparse(substitute(data))
 })
 #Modifying Print
 linreg$methods(show = function(){print("Coefficients:"); print(coefficients)})
-linreg$methods(print = function(){return(coefficients)})
+linreg$methods(print = function() {
+  cat(paste("linreg(formula = ", format(formula),", data = ", format(data_print),")\n\nCoefficients:\n", sep = ""))
+  print.table(coefficients)
+})
 #Methods for resid, pred, coef and summary
 linreg$methods(resid = function(){return(residuals)})
 linreg$methods(pred = function(){return(fitted_values)})
 linreg$methods(coef = function(){return(coefficients)})
+
+
+linreg_mod <- linreg$new(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
+linreg_mod$print()
