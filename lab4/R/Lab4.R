@@ -37,7 +37,8 @@ linreg <- setRefClass("linreg", fields = list(
   df= "numeric",
   variance = "numeric",
   t_values = "numeric",
-  data_print = "character"
+  data_print = "character",
+  dep = "character"
 ))
 
 #Modifying methods
@@ -45,6 +46,7 @@ linreg$methods(initialize = function(formula, data){
   X <<- model.matrix(formula, data)
   qr <<- X
   y <<- data[[all.vars(formula)[1]]]
+  dep <<- tail(all.vars(formula))
   m <- dim(qr)[1]
   n <- dim(qr)[2]
   Q <<- diag(m)
@@ -103,7 +105,16 @@ linreg$methods(print = function() {
 linreg$methods(resid = function(){return(residuals)})
 linreg$methods(pred = function(){return(fitted_values)})
 linreg$methods(coef = function(){return(coefficients)})
+linreg$methods(plot = function(){
+  a <- ggplot(data, aes(x = fitted_values , y = residuals))+ 
+    geom_point(shape = 1)+
+    labs( x = "fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals")
+   
+  b <-  ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(variance)))))+ 
+                     geom_point(shape = 1) +
+      labs( x = "fitted values \n linreg(Petal.Length ~ Species)" , y = "Standardized Residuals") 
+  list(a , b )          
+  })
 
-
-linreg_mod <- linreg$new(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
-linreg_mod$print()
+linreg_mod <- linreg$new(Petal.Length ~ Species, data=iris)
+linreg_mod$plot()
