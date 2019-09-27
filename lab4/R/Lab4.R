@@ -22,6 +22,8 @@ NULL
 
 # 1.2.2 (*) Using the QR decomposition
 
+library(ggplot2)
+
 #Creating object
 linreg <- setRefClass("linreg", fields = list(
   formula = "formula", 
@@ -35,10 +37,11 @@ linreg <- setRefClass("linreg", fields = list(
   fitted_values = "numeric",
   residuals = "numeric",
   df= "numeric",
-  variance = "numeric",
+  Bvar = "numeric",
+  resstdev = "numeric",
   t_values = "numeric",
-  data_print = "character",
-  dep = "character"
+  p_values = "numeric",
+  data_print = "character"
 ))
 
 #Modifying methods
@@ -46,7 +49,7 @@ linreg$methods(initialize = function(formula, data){
   X <<- model.matrix(formula, data)
   qr <<- X
   y <<- data[[all.vars(formula)[1]]]
-  dep <<- tail(all.vars(formula))
+  data_print <<- tail(all.vars(formula))
   m <- dim(qr)[1]
   n <- dim(qr)[2]
   Q <<- diag(m)
@@ -85,11 +88,18 @@ linreg$methods(initialize = function(formula, data){
   #degrees of freedom
   df <<- m-n
   
-  #variance
-  variance <<- sum(residuals ^ 2) / df
+  #residualvariance and standard deviation
+  resvariance <- as.numeric((t(residuals) %*% residuals) / df)
+  resstdev <<- sqrt(resvariance)
+  
+  #variance of beta coefficients
+  Bvar <<- diag(resvariance * solve(t(X) %*% X))
   
   #t-values
-  t_values <<- coefficients / sqrt(variance)
+  t_values <<- coefficients / sqrt(Bvar)
+  
+  #pvalues
+  p_values <<- 2 * pt(abs(t_values), df, lower.tail = FALSE)
   
   #strings formula and data
   formula <<- formula
@@ -105,6 +115,11 @@ linreg$methods(print = function() {
 linreg$methods(resid = function(){return(residuals)})
 linreg$methods(pred = function(){return(fitted_values)})
 linreg$methods(coef = function(){return(coefficients)})
+linreg$methods(summary = function (){
+  summarytable <- data.frame("Coefficients" = coefficients, "Standard error" = sqrt(Bvar), "T Values" = t_values, "P Values"= p_values)
+  print.data.frame(summarytable)
+  cat(paste("\nResidual standard error: ", resstdev, " on ", df, " degrees of freedom", sep = ""))
+})
 linreg$methods(plot = function(){
   a <- ggplot(data, aes(x = fitted_values , y = residuals))+ 
     geom_point(shape = 1)+
@@ -112,7 +127,7 @@ linreg$methods(plot = function(){
     theme(plot.title = element_text(hjust = 0.5))+
   labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals")
    
-  b <-  ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(variance)))))+ 
+  b <-  ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(Bvar)))))+ 
                      geom_point(shape = 1) +
     ggtitle("Scale-Location")+
     theme(plot.title = element_text(hjust = 0.5))+
