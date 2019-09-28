@@ -123,12 +123,14 @@ linreg$methods(summary = function (){
 linreg$methods(plot = function(){
   a <- ggplot(data, aes(x = fitted_values , y = residuals))+ 
     geom_point(shape = 1)+
+    stat_smooth(method="lm", formula = y ~ x, size = 1, color="black")+
     ggtitle("Residuals vs Fitted")+
     theme(plot.title = element_text(hjust = 0.5))+
   labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals")
    
   b <-  ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(Bvar)))))+ 
                      geom_point(shape = 1) +
+    stat_smooth(method="lm", formula = y ~ x, size = 1,  color="black")+
     ggtitle("Scale-Location")+
     theme(plot.title = element_text(hjust = 0.5))+
       labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Standardized Residuals") 
