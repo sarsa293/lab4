@@ -156,6 +156,7 @@ linreg$methods(summary = function (){
 })
 linreg$methods(plot = function(){
   a <- ggplot(data, aes(x = fitted_values , y = residuals))+ 
+<<<<<<< HEAD:R/Lab4.R
     geom_point(shape = 1) + 
     ggtitle("Residuals vs Fitted") + 
     theme(plot.title = element_text(hjust = 0.5)) +
@@ -170,6 +171,21 @@ linreg$methods(plot = function(){
     stat_summary(fun.y = median, geom = "smooth", se=TRUE, size = 1.2)
   
   list(a , b)          
+=======
+    geom_point(shape = 1)+
+    stat_smooth(method="lm", formula = y ~ x, size = 1, color="black")+
+    ggtitle("Residuals vs Fitted")+
+    theme(plot.title = element_text(hjust = 0.5))+
+  labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals")
+   
+  b <-  ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(Bvar)))))+ 
+                     geom_point(shape = 1) +
+    stat_smooth(method="lm", formula = y ~ x, size = 1,  color="black")+
+    ggtitle("Scale-Location")+
+    theme(plot.title = element_text(hjust = 0.5))+
+      labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Standardized Residuals") 
+  list(a , b )          
+>>>>>>> 37d984917c5bc3894d28c57471a18ac496fdb6bb:lab4/R/Lab4.R
   
   })
 
