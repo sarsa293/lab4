@@ -11,6 +11,10 @@ License: GPL-2
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 Suggests: 
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 Imports:
-    ggplot2
+    ggplot2,
+    methods
+VignetteBuilder: knitr

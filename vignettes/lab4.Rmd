@@ -1,0 +1,70 @@
+---
+title: "lab4"
+author: "Team 5"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{lab4}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(lab4)
+```
+
+# Lab4: Creating a Linreg object
+
+For this lab, we created an object generator. The generator will make an object of class *linreg* which, using QR factorization, will create a linear regression model for modeling the relationship between an dependent variable Y and one or more independent variables X. The QR decompostion method.   
+
+To provide numerical stability, we used Households reflectors on the algorithm of QR factorization. More information on QR factorization can be found on [Wikipedia.](https://en.wikipedia.org/wiki/QR_decomposition)  
+
+## Creating a linreg object
+As this package is an RC generato, to create the linreg object the following command is needed.  
+```
+    variable_name <-  linreg$new(data, formula).  
+```  
+From the command above, variable name, data and formula is provided by the user. Make sure that data is a "data.frame" object and formula is a "formula" object using class(). 
+
+## Fields
+The linreg object has the following fields, which can be called with *object_name*$**field**:  
+
++ **formula** A formula object like x ~ y.  
++ **data** A data frame which contains the formula variables.  
++ **X** The matrix created from formula.  
++ **qr** The QR matrix.  
++ **y** A vector with the independent variable values.  
++ **Q** The matrix Q.  
++ **R** The matrix R.  
++ **coefficients** A vector with the beta coefficients.  
++ **fitted_values** A vector with the predicted values of y.  
++ **residuals** A vector with the residuals (y - fitted_values).  
++ **df** The degrees of freedom.  
++ **Bvar** A vector containing the variance of the coefficients.  
++ **resstdev** A vector with the standard deviation of the residuals.  
++ **t_values** A vector with the t_values of the coefficients.  
++ **p_values** A vector with the p_values of the coefficients.  
+
+## Example
+Using the following command  
+```{r, eval=FALSE}
+linreg_mod <- linreg$new(Petal.Length ~ Species, data=iris)
+```  
+we will create a linreg object (variable) with a the linear model of Petal Length vs. Species. The object has the name linreg_mod. Using class() we can see the class of linregmod.
+```{r, eval=FALSE}
+class(linreg_mod)
+```  
+Then, we can call any of the methods inside linreg_mod with the dollar sign. For example we can see the coefficients, standard error, t_values and p_values with summary().
+```{r, eval=FALSE}
+linreg_mod$summary()
+``` 
+See all the methods available in the documentation, using ?`linreg-class`
+```{r, eval=FALSE}
+?`linreg-class`
+``` 
