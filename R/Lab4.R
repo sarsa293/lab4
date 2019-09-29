@@ -155,20 +155,22 @@ linreg$methods(summary = function (){
   cat(paste("\nResidual standard error: ", resstdev, " on ", df, " degrees of freedom", sep = ""))
 })
 linreg$methods(plot = function(){
-  geom_point(shape = 1) +
+  
+  a <- ggplot(data, aes(x <- fitted_values, y = residuals)) +
+    geom_point(shape = 1) +
     stat_smooth(method="lm", formula = y ~ x, size = 1, color="black") +
     ggtitle("Residuals vs Fitted") +
     theme(plot.title = element_text(hjust = 0.5)) +
-    labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals")
+    labs(x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals")
    
-  b <-  ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(Bvar))))) + 
+  b <- ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(Bvar))))) + 
     geom_point(shape = 1) +
     stat_smooth(method="lm", formula = y ~ x, size = 1,  color="black")+
     ggtitle("Scale-Location")+
     theme(plot.title = element_text(hjust = 0.5))+
     labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Standardized Residuals") 
   
-  list(a , b)          
+  list(a, b)          
   })
 
 linreg_mod <- linreg$new(Petal.Length ~ Species, data=iris)
