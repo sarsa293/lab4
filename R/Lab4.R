@@ -155,42 +155,24 @@ linreg$methods(summary = function (){
   cat(paste("\nResidual standard error: ", resstdev, " on ", df, " degrees of freedom", sep = ""))
 })
 linreg$methods(plot = function(){
-  a <- ggplot(data, aes(x = fitted_values , y = residuals))+ 
-<<<<<<< HEAD:R/Lab4.R
-    geom_point(shape = 1) + 
-    ggtitle("Residuals vs Fitted") + 
+  geom_point(shape = 1) +
+    stat_smooth(method="lm", formula = y ~ x, size = 1, color="black") +
+    ggtitle("Residuals vs Fitted") +
     theme(plot.title = element_text(hjust = 0.5)) +
-    labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals") +
-    stat_summary(fun.y = median, geom = "smooth", se=TRUE, size = 1.2)
+    labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals")
    
   b <-  ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(Bvar))))) + 
     geom_point(shape = 1) +
-    ggtitle("Scale-Location") +
-    theme(plot.title = element_text(hjust = 0.5)) +
-    labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Standardized Residuals") +
-    stat_summary(fun.y = median, geom = "smooth", se=TRUE, size = 1.2)
-  
-  list(a , b)          
-=======
-    geom_point(shape = 1)+
-    stat_smooth(method="lm", formula = y ~ x, size = 1, color="black")+
-    ggtitle("Residuals vs Fitted")+
-    theme(plot.title = element_text(hjust = 0.5))+
-  labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Residuals")
-   
-  b <-  ggplot(data, aes(x = fitted_values , y = sqrt(abs(residuals / sqrt(Bvar)))))+ 
-                     geom_point(shape = 1) +
     stat_smooth(method="lm", formula = y ~ x, size = 1,  color="black")+
     ggtitle("Scale-Location")+
     theme(plot.title = element_text(hjust = 0.5))+
-      labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Standardized Residuals") 
-  list(a , b )          
->>>>>>> 37d984917c5bc3894d28c57471a18ac496fdb6bb:lab4/R/Lab4.R
+    labs( x = "Fitted values \n linreg(Petal.Length ~ Species)" , y = "Standardized Residuals") 
   
+  list(a , b)          
   })
 
-#linreg_mod <- linreg$new(Petal.Length ~ Species, data=iris)
-#linreg_mod$plot()
+linreg_mod <- linreg$new(Petal.Length ~ Species, data=iris)
+linreg_mod$plot()
 
 #linreg_mod <- linreg$new(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
 #linreg_mod$summary()
