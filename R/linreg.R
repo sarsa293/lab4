@@ -20,7 +20,8 @@ library(methods)
 #' @field resstdev A vector with the standard deviation of the residuals
 #' @field t_values A vector with the t_values of the coefficients.
 #' @field p_values A vector with the p_values of the coefficients.
-#' @export
+#' @export linreg
+#' @exportClass linreg
 
 linreg <- setRefClass("linreg", fields = list(
   formula = "formula", 

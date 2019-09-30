@@ -53,15 +53,15 @@ The linreg object has the following fields, which can be called with *object_nam
 
 ## Example
 Using the following command  
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 linreg_mod <- linreg$new(Petal.Length ~ Species, data=iris)
 ```  
 we will create a linreg object (variable) with a the linear model of Petal Length vs. Species. The object has the name linreg_mod. Using class() we can see the class of linregmod.
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 class(linreg_mod)
 ```  
 Then, we can call any of the methods inside linreg_mod with the dollar sign. For example we can see the coefficients, standard error, t_values and p_values with summary().
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 linreg_mod$summary()
 ``` 
 See all the methods available in the documentation, using ?`linreg-class`
